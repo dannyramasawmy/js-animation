@@ -50,7 +50,7 @@ window.addEventListener('resize', function(event) {
     init();
 });
 
-function Circle(x, y, vx, vy, radius, color) {
+function Circle(x, y, vx, vy, radius, color, tdecay) {
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -59,6 +59,7 @@ function Circle(x, y, vx, vy, radius, color) {
     this.maxRadius = 60;
     this.minRadius = radius
     this.color = color;
+    self.tdecay = tdecay
 
     this.draw = function() {
         c.beginPath();
@@ -75,14 +76,10 @@ function Circle(x, y, vx, vy, radius, color) {
         if (this.y > innerHeight-this.radius || this.y < this.radius ) {
             this.vy = -this.vy
         }
-
-
    
         // update velocity
         this.x += this.vx * mouse.vmult;
         this.y += this.vy * mouse.vmult;
-
-
 
         // if near mouse
         var radiusOfInfluence = 75; 
@@ -90,13 +87,13 @@ function Circle(x, y, vx, vy, radius, color) {
             if (this.radius < this.maxRadius) {
                 this.radius += 0.5
             // user clicks
-            var fac = 1
+            var fac = 1.5
             this.x +=  (mouse.x - this.x)/Math.abs(mouse.x - this.x) * fac
             this.y +=  (mouse.y - this.y)/Math.abs(mouse.y - this.y) * fac
             }
         } else {
             if (this.radius > this.minRadius) {
-                this.radius -= 0.5
+                this.radius -= self.tdecay
             }
         }
         
@@ -107,7 +104,7 @@ function Circle(x, y, vx, vy, radius, color) {
 
 // generate circles
 var circle = [];
-var numCircles = 400;
+var numCircles = 625;
 function init() {
     circle = [];
     for (var i = 0; i < numCircles; i++) {
@@ -116,8 +113,9 @@ function init() {
         var y = Math.random() * (innerHeight - 2*radius) + radius;;
         var vx =  Math.round((Math.random() - 0.5) * 5) ;
         var vy = Math.round((Math.random() - 0.5) * 5) ;
+        var tdecay = Math.random() * 0.4 
         color = colorArray[Math.floor(Math.random() * colorArray.length)]
-        circle.push(new Circle(x, y, vx, vy, radius, color))
+        circle.push(new Circle(x, y, vx, vy, radius, color, tdecay))
     }
 
 }
