@@ -132,6 +132,9 @@ function animate() {
         circle[i].update();
     }
 
+    //c.font = "100px Arial";
+    //c.fillText("Welcome", innerWidth/3, innerHeight/2);
+    
 }
 
 init();
