@@ -6,16 +6,31 @@ canvas.height = window.innerHeight;
 // drawing
 var c = canvas.getContext('2d')
 
+var mouse = {
+    x : undefined,
+    y : undefined,
+    d : false,
+    vmult : 1
+}
+
+// interaction
 window.addEventListener('mousemove',
     function(event) {
         mouse.x = event.x
         mouse.y = event.y
     })
+window.addEventListener('mousedown',
+    function(event) {
+        mouse.d = true
+        mouse.vmult = -1.5
+    })
+window.addEventListener('mouseup',
+    function(event) {
+        mouse.d = false
+        mouse.vmult = 1
+    })
 
-var mouse = {
-    x : undefined,
-    y : undefined
-}
+    
 
 // Color info:
 // Carmen Russmann
@@ -53,6 +68,7 @@ function Circle(x, y, vx, vy, radius, color) {
     };
 
     this.update = function() {
+        // wall collision
         if (this.x > innerWidth-this.radius || this.x < this.radius ) {
             this.vx = -this.vx
         }
@@ -60,16 +76,27 @@ function Circle(x, y, vx, vy, radius, color) {
             this.vy = -this.vy
         }
 
-        this.x += this.vx
-        this.y += this.vy
 
-        if ((Math.abs(mouse.x - this.x) < 50) && (Math.abs(mouse.y - this.y) < 50) ){
+   
+        // update velocity
+        this.x += this.vx * mouse.vmult;
+        this.y += this.vy * mouse.vmult;
+
+
+
+        // if near mouse
+        var radiusOfInfluence = 75; 
+        if ((Math.abs(mouse.x - this.x) < radiusOfInfluence) && (Math.abs(mouse.y - this.y) < radiusOfInfluence) ){
             if (this.radius < this.maxRadius) {
-                this.radius += 1
+                this.radius += 0.5
+            // user clicks
+            var fac = 1
+            this.x +=  (mouse.x - this.x)/Math.abs(mouse.x - this.x) * fac
+            this.y +=  (mouse.y - this.y)/Math.abs(mouse.y - this.y) * fac
             }
         } else {
             if (this.radius > this.minRadius) {
-                this.radius -= 1
+                this.radius -= 0.5
             }
         }
         
