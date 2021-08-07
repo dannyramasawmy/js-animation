@@ -19,7 +19,15 @@ var mouse = {
     y : undefined
 }
 
-function Circle(x, y, vx, vy, radius) {
+var colorArray = [
+    '#291B19',
+    '#794034',
+    '#B96D47',
+    '#D89848',
+    '#6E8B76',
+];
+
+function Circle(x, y, vx, vy, radius, color) {
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -27,13 +35,12 @@ function Circle(x, y, vx, vy, radius) {
     this.radius = radius;
     this.maxRadius = 60;
     this.minRadius = radius
-    this.color = "blue";
+    this.color = color;
 
     this.draw = function() {
         c.beginPath();
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        c.strokeStyle = this.color;
-        c.stroke();
+        c.fillStyle = this.color;
         c.fill();
     };
 
@@ -58,8 +65,6 @@ function Circle(x, y, vx, vy, radius) {
             }
         }
         
-   
-
         this.draw();
     };
 };
@@ -69,12 +74,13 @@ function Circle(x, y, vx, vy, radius) {
 var circle = [];
 var numCircles = 400;
 for (var i = 0; i < numCircles; i++) {
-    var radius =  Math.random() * 15 + 1;
+    var radius =  Math.random() * 5 + 1;
     var x = Math.random() * (innerWidth - 2*radius) + radius;
     var y = Math.random() * (innerHeight - 2*radius) + radius;;
-    var vx =  Math.round((Math.random() - 0.5) * 10) ;
-    var vy = Math.round((Math.random() - 0.5) * 10) ;
-    circle.push(new Circle(x, y, vx, vy, radius))
+    var vx =  Math.round((Math.random() - 0.5) * 5) ;
+    var vy = Math.round((Math.random() - 0.5) * 5) ;
+    color = colorArray[Math.floor(Math.random() * colorArray.length)]
+    circle.push(new Circle(x, y, vx, vy, radius, color))
 }
 
 // call a recursive like function to draw each frame
