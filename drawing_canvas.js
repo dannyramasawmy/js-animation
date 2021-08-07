@@ -3,8 +3,6 @@
 var canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
-
 // drawing
 var c = canvas.getContext('2d')
 
@@ -19,6 +17,9 @@ var mouse = {
     y : undefined
 }
 
+// Color info:
+// Carmen Russmann
+// https://color.adobe.com/search?q=warm&t=term
 var colorArray = [
     '#291B19',
     '#794034',
@@ -26,6 +27,13 @@ var colorArray = [
     '#D89848',
     '#6E8B76',
 ];
+
+window.addEventListener('resize', function(event) {
+    //console.log(event)
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+});
 
 function Circle(x, y, vx, vy, radius, color) {
     this.x = x;
@@ -73,14 +81,18 @@ function Circle(x, y, vx, vy, radius, color) {
 // generate circles
 var circle = [];
 var numCircles = 400;
-for (var i = 0; i < numCircles; i++) {
-    var radius =  Math.random() * 5 + 1;
-    var x = Math.random() * (innerWidth - 2*radius) + radius;
-    var y = Math.random() * (innerHeight - 2*radius) + radius;;
-    var vx =  Math.round((Math.random() - 0.5) * 5) ;
-    var vy = Math.round((Math.random() - 0.5) * 5) ;
-    color = colorArray[Math.floor(Math.random() * colorArray.length)]
-    circle.push(new Circle(x, y, vx, vy, radius, color))
+function init() {
+    circle = [];
+    for (var i = 0; i < numCircles; i++) {
+        var radius =  Math.random() * 5 + 1;
+        var x = Math.random() * (innerWidth - 2*radius) + radius;
+        var y = Math.random() * (innerHeight - 2*radius) + radius;;
+        var vx =  Math.round((Math.random() - 0.5) * 5) ;
+        var vy = Math.round((Math.random() - 0.5) * 5) ;
+        color = colorArray[Math.floor(Math.random() * colorArray.length)]
+        circle.push(new Circle(x, y, vx, vy, radius, color))
+    }
+
 }
 
 // call a recursive like function to draw each frame
@@ -97,4 +109,5 @@ function animate() {
 
 }
 
+init();
 animate();
