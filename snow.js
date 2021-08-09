@@ -63,7 +63,7 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
 
 // generate circles
 var circle = [];
-var numCircles = 625;
+var numCircles = 500;
 function init() {
     circle = [];
     for (var i = 0; i < numCircles; i++) {

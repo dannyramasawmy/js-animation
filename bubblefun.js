@@ -7,7 +7,7 @@ canvas.height = window.innerHeight;
 var c = canvas.getContext('2d')
 
 // set to true to not clear background
-var jacksonPollock = true;
+var jacksonPollock = false;
 
 var mouse = {
     x : undefined,
