@@ -54,7 +54,7 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
    
         // update velocity
         this.x += this.vx ;
-        this.y += this.vy + 1;
+        this.y += this.vy + 0.1;
         
         this.draw();
     };
@@ -70,8 +70,8 @@ function init() {
         var radius =  Math.random() * 5 + 1;
         var x = Math.random() * (innerWidth - 2*radius) + radius;
         var y = Math.random() * (innerHeight - 2*radius) + radius;;
-        var vx =  Math.round((Math.random() - 0.5) * 2) ;
-        var vy = Math.round((Math.random() + 0.1) * 2) ;
+        var vx =  (Math.random() - 0.5) * 0.5 ;
+        var vy = Math.random();
         var tdecay = Math.random() * 0.4 
         color = colorArray[Math.floor(Math.random() * colorArray.length)]
         circle.push(new Circle(x, y, vx, vy, radius, color, tdecay))
