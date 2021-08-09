@@ -1,9 +1,22 @@
 canvas {
     border: 1px solid gray;
     background: dimgray;
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:-1;
 }
 
 body {
     margin: 0;
     overflow: hidden; /* Hide scrollbars */
+
 }
+
+div {
+    position:absolute;
+    z-index:0;
+    left:12px;
+    top:10px;
+  }
+
