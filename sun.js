@@ -30,7 +30,7 @@ window.addEventListener('resize', function(event) {
     circle = []
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    init(5);
+    init(100);
     background()
     
 });

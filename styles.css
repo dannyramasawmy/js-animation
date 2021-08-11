@@ -7,6 +7,19 @@ canvas {
     z-index:-1;
 }
 
+header {
+    text-align: center;
+    font-family: Verdana;
+    font-size: 30px;
+    padding-top: 2%;
+}
+
+a {
+    margin: 20px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.5);    
+}
+
 body {
     margin: 0;
     overflow: hidden; /* Hide scrollbars */
