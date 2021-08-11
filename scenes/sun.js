@@ -1,4 +1,3 @@
-
 // Set canvas H and W
 var canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
@@ -90,31 +89,8 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
 
 
 
-function drawMountain(x, height, width , gray) {
-    this.x = x
-    this.height = height
-    this.width = width
-    this.gray = gray
-    this.y = innerHeight*0.6
 
-
-    this.draw = function() {
-        c.beginPath();
-        // c.strokeStyle = 'black';
-        c.moveTo( this.x , this.y - this.height)
-        c.lineTo( this.x + this.width  , this.y )
-        c.lineTo( this.x - this.width, this.y )
-        // c.lineTo( x  - 300 , y )
-        // c.lineTo( x  , y )
-        c.strokeStyle = 'gray';
-        c.lineWidth = 5;
-        // c.setStr
-        // c.fillStyle = `rgb(${this.gray}, ${this.gray}, ${this.gray})`
-        c.fill();
-        // c.stroke();
-    };
-};
-
+var mymounts = []
 
 var xs = []
 var height_ =[]
@@ -126,7 +102,58 @@ for (var i = 0; i < muns; i++) {
     height_.push( (Math.random()*150 + 50))
     width_.push( (Math.random()*150 + 50))
     gray_.push( Math.round(Math.random()*100))
+    mymounts.push(new drawMountain(xs[i], height_[i], width_[i], gray_[i]))
+}
 
+
+
+function drawMountain(x, h, w , cols) {
+    this.x = x
+    this.height = h
+    this.width = w
+    this.gray = cols
+    this.y = innerHeight*0.6
+
+
+    this.draw = function() {
+        c.beginPath();
+        c.moveTo( this.x , this.y - this.height)
+        c.lineTo( this.x + this.width  , this.y )
+        c.lineTo( this.x -  this.width,  this.y )
+        c.fillStyle = `rgba(${this.gray}, ${this.gray}, ${this.gray}, ${1})`
+        c.fill();
+    };
+};
+
+
+
+
+function drawMounts() {
+    for (var i =0; i < muns; i++) {
+        // console.log(xs[i])
+        // console.log(height_[i])
+        // console.log(width_[i])
+        // console.log(gray_[i])
+
+
+
+
+        c.beginPath();
+        c.moveTo( xs[i] ,innerHeight*0.6 - height_[i])
+        c.lineTo( xs[i] + width_[i]  , innerHeight*0.6 )
+        c.lineTo( xs[i] - width_[i], innerHeight*0.6 )
+        c.fillStyle = `rgba(${gray_[i]}, ${gray_[i]}, ${gray_[i]}, ${1})`
+        c.fill();
+
+        c.beginPath();
+        c.moveTo( xs[i] ,innerHeight*0.6 + height_[i])
+        c.lineTo( xs[i] + width_[i]  , innerHeight*0.6 )
+        c.lineTo( xs[i] - width_[i], innerHeight*0.6 )
+        c.lineWidth = 5;
+        c.fillStyle = `rgba(${gray_[i]}, ${gray_[i]}, ${gray_[i]+50}, ${0.7} )`
+        c.fill();
+
+        }
 }
 
 
@@ -198,57 +225,11 @@ function animate() {
     c.fillStyle = grd;
     c.fill();
 
-
-    console.log(xs)
-console.log(height_)
-console.log(width_)
-console.log(gray_)
-   for (var i =0; i < muns; i++) {
-    // console.log(xs[i])
-    // console.log(height_[i])
-    // console.log(width_[i])
-    // console.log(gray_[i])
-
-    c.beginPath();
-    // c.strokeStyle = 'black';
-    c.moveTo( xs[i] ,innerHeight*0.6 - height_[i])
-    c.lineTo( xs[i] + width_[i]  , innerHeight*0.6 )
-    c.lineTo( xs[i] - width_[i], innerHeight*0.6 )
-    // c.lineTo( x  - 300 , y )
-    // c.lineTo( x  , y )
-    c.lineWidth = 5;
-    // c.setStr
-    c.fillStyle = `rgba(${gray_[i]}, ${gray_[i]}, ${gray_[i]}, ${1})`
-    c.fill();
-
-    c.beginPath();
-    // c.strokeStyle = 'black';
-    c.moveTo( xs[i] ,innerHeight*0.6 + height_[i])
-    c.lineTo( xs[i] + width_[i]  , innerHeight*0.6 )
-    c.lineTo( xs[i] - width_[i], innerHeight*0.6 )
-    // c.lineTo( x  - 300 , y )
-    // c.lineTo( x  , y )
-    c.lineWidth = 5;
-    // c.setStr
-    c.fillStyle = `rgba(${gray_[i]}, ${gray_[i]}, ${gray_[i]+50}, ${0.7} )`
-    c.fill();
-
+    // drawMounts()
+    for (var i = 0;  i< muns; i ++) {
+    mymounts[i].draw()
     }
 
-
-    // for (var i =0; i < xs.length; i++) {
-    //     drawMountain(xs[i], height[i], width[i], gray[i])
-    // }
-
-//         x = (Math.random()) * innerWidth
-//     height = (Math.random()*150 + 50)
-//     width = (Math.random()*150 + 50)
-//     gray = Math.round(Math.random*100)
-//    var xx = drawMountain(x, height, width, gray)
-//     // xx.draw()
-    //c.font = "100px Arial";
-    //c.fillText("Welcome", innerWidth/3, innerHeight/2);
-    
 }
 
 for (var i = 0; i < 100 ; i ++ ) {
