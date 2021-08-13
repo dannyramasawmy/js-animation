@@ -74,6 +74,9 @@ window.addEventListener('resize', function (event) {
 
 
 
+var myBoat = new boat(innerWidth/2 , innerHeight*2/3, 50, "#8C3718", "#F2D0A7")
+var myBoat2 = new boat(innerWidth/2 , innerHeight*4/5, 100, "#A64914", "#F2D0A7")
+
 
 
 
@@ -95,7 +98,7 @@ for (var i = 0; i < nMountain; i++) {
     var mountainBaseY = innerHeight * 0.6
     var mountainHeight =  RandomRange(innerHeight*0.07, innerHeight*0.25)  
     var mountainWidth =  RandomRange(innerHeight*0.07, innerHeight*0.25)  
-    var grayLevel = (Math.round(Math.random() * 100))
+    var grayLevel = RandomIntRange(0, 100)
     mountainArray.push(new drawMountain(mountainBaseX, mountainBaseY,  mountainHeight, mountainWidth, grayLevel, true))
 }
 
@@ -118,16 +121,14 @@ function init(numCircles) {
 
 }
 
-// background color gradient
-gradient = c.createLinearGradient(0, 0, 0, innerHeight)
-gradient.addColorStop(0, '#D73E02');
-gradient.addColorStop(0.2, '#F35C03');
-// gradient.addColorStop(0.4, '#F17302');
-gradient.addColorStop(0.5, 'yellow');
 
-gradient.addColorStop(0.6, '#AEDFF2');
-gradient.addColorStop(0.8, '#04B2D9');
-gradient.addColorStop(1, '#0669BF');
+// create background color gradient
+gradient = c.createLinearGradient(0, 0, 0, innerHeight)
+var colorStops = [0, 0.2, 0.5, 0.6, 0.8, 1]
+for (var i = 0; i < colorStops.length; i++) {
+    gradient.addColorStop(colorStops[i], colorDict.sunset2Sea[i]);
+}
+
 
 
 grd = c.createLinearGradient(0, 0, innerWidth * 0.1, innerHeight * 0.1)
@@ -140,6 +141,7 @@ function background() {
 }
 count = 100
 background()
+
 
 
 
@@ -162,10 +164,12 @@ function animate() {
     // draw the sun
     theSun.draw();
 
-    // drawMounts()
-    for (var i = 0; i < nMountain; i++) {
-        mountainArray[i].draw()
-    }
+    drawArrayObjects(mountainArray)
+
+    myBoat.move(1)
+    myBoat.draw()
+    myBoat2.move(-2)
+    myBoat2.draw()
 
 }
 
