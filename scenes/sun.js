@@ -5,7 +5,6 @@ canvas.height = window.innerHeight;
 // drawing
 var c = canvas.getContext('2d')
 
-
 // Color info:
 // Carmen Russmann
 // https://color.adobe.com/search?q=warm&t=term
@@ -22,17 +21,6 @@ var colorArray = [
 // #FFB551
 // #FB9A1A
 // #DB5817
-
-var circle = [];
-window.addEventListener('resize', function (event) {
-    //console.log(event)
-    circle = []
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    init(100);
-    background()
-
-});
 
 function Circle(x, y, vx, vy, radius, color, tdecay) {
     this.x = x;
@@ -71,41 +59,22 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
     };
 };
 
+var circle = [];
+window.addEventListener('resize', function (event) {
+    //console.log(event)
+    circle = []
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init(100);
+    background()
+
+});
 
 
-function drawMountain(x, h, w, cols) {
-    this.x = x
-    this.height = h
-    this.width = w
-    this.gray = cols
-    this.y = innerHeight * 0.6
 
 
-    this.draw_ = function(reflection) {
-        // positive mountains
-        c.beginPath();
-        if (reflection) 
-        {   // mountains
-            c.fillStyle = `rgba(${this.gray}, ${this.gray}, ${this.gray}, ${1})`
-            c.moveTo(this.x, this.y - this.height)
-        }
-        else 
-        {   // reflections
-            c.fillStyle = `rgba(${this.gray}, ${this.gray}, ${this.gray + 50}, ${0.7} )`
-            c.moveTo(this.x, this.y + this.height)
-        }
-        c.lineTo(this.x + this.width, this.y)
-        c.lineTo(this.x - this.width, this.y)
-        c.fill();
-    }
 
-    this.draw = function () {
-        // draw mountain
-        this.draw_(false)
-        // draw reflection
-        this.draw_(true)
-    };
-};
+
 
 
 function drawSun() {
@@ -119,19 +88,15 @@ function drawSun() {
 
 
 
-var mymounts = []
-
-var xs = undefined
-var height_ = undefined
-var width_ = undefined
-var gray_ = undefined
-var muns = 100
-for (var i = 0; i < muns; i++) {
-    xs = (Math.random() * innerWidth)
-    height_ = ((Math.random() * 150 + 50))
-    width_ = ((Math.random() * 150 + 50))
-    gray_ = (Math.round(Math.random() * 100))
-    mymounts.push(new drawMountain(xs, height_, width_, gray_))
+var mountainArray = []
+var nMountain = 100
+for (var i = 0; i < nMountain; i++) {
+    var mountainBaseX = RandomRange(0, innerWidth)
+    var mountainBaseY = innerHeight * 0.6
+    var mountainHeight =  RandomRange(innerHeight*0.07, innerHeight*0.25)  
+    var mountainWidth =  RandomRange(innerHeight*0.07, innerHeight*0.25)  
+    var grayLevel = (Math.round(Math.random() * 100))
+    mountainArray.push(new drawMountain(mountainBaseX, mountainBaseY,  mountainHeight, mountainWidth, grayLevel, true))
 }
 
 
@@ -198,8 +163,8 @@ function animate() {
     theSun.draw();
 
     // drawMounts()
-    for (var i = 0; i < muns; i++) {
-        mymounts[i].draw()
+    for (var i = 0; i < nMountain; i++) {
+        mountainArray[i].draw()
     }
 
 }
