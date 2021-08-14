@@ -7,7 +7,8 @@ var colorDict = {
     "boat": {
         "boat": "#8C3718",
         "sail": "#F2D0A7"
-    }
+    },
+    "sunGradient" : [`rgb(255, 255, 0)`, 'rgb(255, 100, 0)']
 }
 
 // =============================================================================
@@ -43,7 +44,7 @@ function drawArrayObjects(arr) {
 // =============================================================================
 
 // Will draw a mountain at x,y with height (h) and width (w) using  across the screen
-function drawMountain(x, y, h, w, grayLevel, drawReflection = false) {
+function Mountain(x, y, h, w, grayLevel, drawReflection = false) {
     this.x = x
     this.height = h
     this.width = w
@@ -72,12 +73,13 @@ function drawMountain(x, y, h, w, grayLevel, drawReflection = false) {
 
 
 // Will draw a boat at x,y with height (h) with different base and sail colors
-function boat(x, y, h, boatColor, sailColor) {
+function Boat(x, y, h, vx, boatColor, sailColor) {
     this.x = x
     this.y = y
     this.height = h
     this.constHeight = 270
     this.reflectionAlpha = "44" // hex
+    this.vx = vx
     // boat measurments
     this.boatColor = boatColor
     this.bottomScale = this.height / this.constHeight
@@ -107,12 +109,21 @@ function boat(x, y, h, boatColor, sailColor) {
     }
 
     this.draw = function () {
+        this.update(this.vx)
         // sail
         c.beginPath();
         c.fillStyle = this.sailColor
         c.moveTo(this.x, this.y - this.sailYOffset - this.boatDepth)
         c.lineTo(this.x, this.y - this.sailHeight - this.sailYOffset - this.boatDepth)
         c.lineTo(this.x + this.sailLength, this.y - this.sailYOffset - this.boatDepth)
+        c.fill();
+        
+        // sail reflection
+        c.beginPath();
+        c.fillStyle = this.sailColor + this.reflectionAlpha
+        c.moveTo(this.x, this.y + this.sailYOffset + this.boatDepth)
+        c.lineTo(this.x, this.y + this.sailHeight + this.sailYOffset + this.boatDepth)
+        c.lineTo(this.x + this.sailLength, this.y + this.sailYOffset + this.boatDepth)
         c.fill();
 
         // boat
@@ -123,14 +134,6 @@ function boat(x, y, h, boatColor, sailColor) {
         c.lineTo(this.x + this.shortLength, this.y)
         c.lineTo(this.x - this.shortLength, this.y)
         c.lineTo(this.x - this.longLength, this.y - this.boatDepth)
-        c.fill();
-
-        // sail reflection
-        c.beginPath();
-        c.fillStyle = this.sailColor + this.reflectionAlpha
-        c.moveTo(this.x, this.y + this.sailYOffset + this.boatDepth)
-        c.lineTo(this.x, this.y + this.sailHeight + this.sailYOffset + this.boatDepth)
-        c.lineTo(this.x + this.sailLength, this.y + this.sailYOffset + this.boatDepth)
         c.fill();
 
         // boat reflection

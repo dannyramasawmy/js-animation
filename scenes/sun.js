@@ -5,22 +5,6 @@ canvas.height = window.innerHeight;
 // drawing
 var c = canvas.getContext('2d')
 
-// Color info:
-// Carmen Russmann
-// https://color.adobe.com/search?q=warm&t=term
-var colorArray = [
-    150,
-    200,
-    255,
-    175,
-    225,
-];
-
-// #DF7126
-// #EDD06F
-// #FFB551
-// #FB9A1A
-// #DB5817
 
 function Circle(x, y, vx, vy, radius, color, tdecay) {
     this.x = x;
@@ -30,7 +14,8 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
     this.radius = radius;
     this.maxRadius = 50;
     this.minRadius = radius
-    this.color = colorArray[Math.floor(Math.random() * colorArray.length)]
+    this.color = color
+    // this.color = colorArray[Math.floor(Math.random() * colorArray.length)]
     this.tdecay = 1
     this.redness = 150
     this.tf = 0.004
@@ -40,7 +25,7 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
         c.moveTo(this.x, this.y)
         c.lineTo(this.x + this.vx * innerWidth * 0.05, this.y + this.vy * innerWidth * 0.05)
         // c.strokeStyle  = `rgba(255, ${255}, 0, ${0.1})`;
-        c.strokeStyle = `rgba(255, ${self.color}, 0, ${this.tdecay})`;
+        c.strokeStyle = `rgba(255, ${this.color}, 0, ${this.tdecay})`;
         c.lineWidth = 5;
         c.setStr
         // c.fill();
@@ -59,54 +44,67 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
     };
 };
 
+// initialise canvas elements
 var circle = [];
+var mountainArray = []
+var waterLevel = 0.6
+var boatArray = []
 window.addEventListener('resize', function (event) {
     //console.log(event)
     circle = []
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     init(100);
-    background()
-
+    drawBackground()
+    makeMountains()
+    drawBoats()
 });
 
 
-
-
-
-var myBoat = new boat(innerWidth/2 , innerHeight*2/3, 50, colorDict.boat.boat, colorDict.boat.sail)
-var myBoat2 = new boat(innerWidth/2 , innerHeight*4/5, 100, colorDict.boat.boat, colorDict.boat.sail)
-
-
+function drawBoats() {
+    nBoat = 4
+    boatArray = []
+    for (var i = 0; i < nBoat; i++) {
+        var boatYCoordinate = RandomRange(innerHeight * waterLevel, innerHeight);
+        var boatHeight = RandomRange(70, 70) * Math.pow((boatYCoordinate/innerHeight), 2);
+        var vx = RandomRange(0.2, 1) * Math.pow(-1, RandomIntRange(0, 1));
+        boatArray.push(new Boat(innerWidth / 2, boatYCoordinate,
+            boatHeight, vx, colorDict.boat.boat, colorDict.boat.sail));
+    }
+}
+drawBoats();
 
 
 function drawSun() {
     this.draw = function () {
         c.beginPath();
-        c.arc(0, 0, innerWidth * 0.1, 0, Math.PI * 2, false);
+        c.arc(0, 0, innerHeight * 0.2, 0, Math.PI * 2, false);
+        var grd = c.createLinearGradient(0, 0, innerWidth * 0.1, innerHeight * 0.1)
+        grd.addColorStop(0, colorDict.sunGradient[0]);
+        grd.addColorStop(1, colorDict.sunGradient[1]);
         c.fillStyle = grd;
         c.fill();
     }
 }
 
 
-
-var mountainArray = []
-var nMountain = 100
-for (var i = 0; i < nMountain; i++) {
-    var mountainBaseX = RandomRange(0, innerWidth)
-    var mountainBaseY = innerHeight * 0.6
-    var mountainHeight =  RandomRange(innerHeight*0.07, innerHeight*0.25)  
-    var mountainWidth =  RandomRange(innerHeight*0.07, innerHeight*0.25)  
-    var grayLevel = RandomIntRange(0, 100)
-    mountainArray.push(new drawMountain(mountainBaseX, mountainBaseY,  mountainHeight, mountainWidth, grayLevel, true))
+function makeMountains() {
+    var nMountain = 100
+    mountainArray = []
+    for (var i = 0; i < nMountain; i++) {
+        var mountainBaseX = RandomRange(0, innerWidth)
+        var mountainBaseY = innerHeight * waterLevel
+        var mountainHeight = RandomRange(innerHeight * 0.07, innerHeight * 0.25)
+        var mountainWidth = RandomRange(innerHeight * 0.07, innerHeight * 0.25)
+        var grayLevel = RandomIntRange(0, 100)
+        mountainArray.push(new Mountain(mountainBaseX, mountainBaseY, mountainHeight, mountainWidth, grayLevel, true))
+    }
 }
-
-
+makeMountains();
 
 
 // generate circles
-var numCircles = 5;
+var nCircles = 5;
 function init(numCircles) {
     for (var i = 0; i < numCircles; i++) {
         var radius = Math.random() * 5 + 1;
@@ -115,32 +113,24 @@ function init(numCircles) {
         var vx = Math.random();
         var vy = Math.random();
         var tdecay = Math.random() * 0.4
-        color = colorArray[Math.floor(Math.random() * colorArray.length)]
+        var color = RandomIntRange(100, 255)
         circle.push(new Circle(radius, radius, vx, vy, radius, color, tdecay))
     }
 
 }
 
 
-// create background color gradient
-gradient = c.createLinearGradient(0, 0, 0, innerHeight)
-var colorStops = [0, 0.2, 0.5, 0.6, 0.8, 1]
-for (var i = 0; i < colorStops.length; i++) {
-    gradient.addColorStop(colorStops[i], colorDict.sunset2Sea[i]);
-}
-
-
-
-grd = c.createLinearGradient(0, 0, innerWidth * 0.1, innerHeight * 0.1)
-grd.addColorStop(0, `rgb(255, 255, 0)`);
-grd.addColorStop(1, 'rgb(255, 100, 0)');
-
-function background() {
+function drawBackground() {
+    // create background color gradient
+    gradient = c.createLinearGradient(0, 0, 0, innerHeight)
+    var colorStops = [0, 0.2, 0.5, waterLevel, 0.8, 1]
+    for (var i = 0; i < colorStops.length; i++) {
+        gradient.addColorStop(colorStops[i], colorDict.sunset2Sea[i]);
+    }
     c.fillStyle = gradient;
     c.fillRect(0, 0, innerWidth, innerHeight);
 }
-count = 100
-background()
+drawBackground()
 
 
 
@@ -150,7 +140,7 @@ background()
 function animate() {
     requestAnimationFrame(animate)
 
-    background()
+    drawBackground()
 
     // update all circles
     for (var i = 0; i < circle.length; i++) {
@@ -161,15 +151,9 @@ function animate() {
         }
     }
 
-    // draw the sun
     theSun.draw();
-
     drawArrayObjects(mountainArray)
-
-    myBoat.update(0.5)
-    myBoat.draw()
-    myBoat2.update(-1)
-    myBoat2.draw()
+    drawArrayObjects(boatArray)
 
 }
 
