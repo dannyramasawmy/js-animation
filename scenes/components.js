@@ -8,7 +8,8 @@ var colorDict = {
         "boat": "#8C3718",
         "sail": "#F2D0A7"
     },
-    "sunGradient" : [`rgb(255, 255, 0)`, 'rgb(255, 100, 0)']
+    "sunGradient" : [`rgb(255, 255, 0)`, 'rgb(255, 100, 0)'],
+    "cloud" : ["#FBDDB5", '#F35C03']
 }
 
 // =============================================================================
@@ -175,5 +176,77 @@ function LightRay(x, y, vx, vy, radius, color, decayFactor) {
         c.strokeStyle = `rgba(255, ${this.color}, 0, ${this.initalAlpha})`;
         c.lineWidth = this.linewidth;
         c.stroke();
+    }
+}
+
+// Will draw 2 or 3 birds following the mouse around the screen
+function InteractiveBirdFlock(x, y, wingSpan, flapVelocity) {
+    this.x = x;
+    this.y = y;
+    this.wingSpan = wingSpan;
+    this.flapVelocity = flapVelocity;
+    this.offset = {
+        x : this.wingSpan,
+        y : this.wingSpan
+    }
+
+    this.update = function (mouse) {
+        this.x = mouse.x
+        this.y = mouse.y    
+    }
+    
+    this.drawBird = function(x, y) {
+        c.beginPath();
+        c.moveTo(x, y-this.wingSpan/3)
+        c.lineTo(x + this.wingSpan/3 , y -this.wingSpan/2);
+        c.lineTo(x + this.wingSpan,   y );
+        c.strokeStyle = "black";
+        c.stroke();
+
+        c.beginPath();
+        c.moveTo(x, y-this.wingSpan/3)
+        c.lineTo(x - this.wingSpan/3 , y -this.wingSpan/2);
+        c.lineTo(x - this.wingSpan,   y );
+        c.strokeStyle = "black";
+        c.stroke();
+    }
+
+    this.draw = function (mouse) {
+        this.update(mouse)
+        this.drawBird(this.x, this.y)
+        this.drawBird(this.x + this.offset.x, this.y + this.offset.y)
+
+    }
+}
+
+
+// Will draw a group of clouds
+function Cloud(x, y, h, vx, cloudColor) {
+    this.x = x;
+    this.y = y;
+    this.height = h;
+    this.vx = vx;
+    this.cloudColor = cloudColor;
+
+    this.update = function () {
+        // TODO: will be updated with some velocity
+        this.x = this.x
+        this.y = this.y    
+    }
+    
+    this.drawCloud = function (x, y) {
+        c.beginPath();
+        c.arc(x, y, this.height, -Math.PI,0, false);
+        c.fillStyle = this.cloudColor;
+        c.fill();
+    }
+
+    this.draw = function () {
+        this.update()
+
+        this.drawCloud(this.x+this.height*1/2, this.y-this.height/4)
+        this.drawCloud(this.x+this.height, this.y+this.height/4)
+        this.drawCloud(this.x, this.y)
+    
     }
 }

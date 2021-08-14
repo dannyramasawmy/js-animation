@@ -10,33 +10,35 @@ var c = canvas.getContext('2d')
 var jacksonPollock = false;
 
 var mouse = {
-    x : undefined,
-    y : undefined,
-    d : false,
-    vmult : 1
+    x: undefined,
+    y: undefined,
+    d: false,
+    vmult: 1
 }
 
 
 if (jacksonPollock == false) {
-// interaction
-window.addEventListener('mousemove',
-    function(event) {
-        mouse.x = event.x
-        mouse.y = event.y
-    })
+    // interaction
+    window.addEventListener('mousemove',
+        function (event) {
+            mouse.x = event.x
+            mouse.y = event.y
+        })
 }
-    window.addEventListener('mousedown',
-    function(event) {
+
+
+window.addEventListener('mousedown',
+    function (event) {
         mouse.d = true
         mouse.vmult = -1.5
     })
 window.addEventListener('mouseup',
-    function(event) {
+    function (event) {
         mouse.d = false
         mouse.vmult = 1
     })
 
-    
+
 
 // Color info:
 // Carmen Russmann
@@ -49,7 +51,7 @@ var colorArray = [
     '#6E8B76',
 ];
 
-window.addEventListener('resize', function(event) {
+window.addEventListener('resize', function (event) {
     //console.log(event)
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -67,42 +69,42 @@ function Circle(x, y, vx, vy, radius, color, tdecay) {
     this.color = color;
     self.tdecay = tdecay
 
-    this.draw = function() {
+    this.draw = function () {
         c.beginPath();
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
         c.fillStyle = this.color;
         c.fill();
     };
 
-    this.update = function() {
+    this.update = function () {
         // wall collision
-        if (this.x > innerWidth-this.radius || this.x < this.radius ) {
+        if (this.x > innerWidth - this.radius || this.x < this.radius) {
             this.vx = -this.vx
         }
-        if (this.y > innerHeight-this.radius || this.y < this.radius ) {
+        if (this.y > innerHeight - this.radius || this.y < this.radius) {
             this.vy = -this.vy
         }
-   
+
         // update velocity
         this.x += this.vx * mouse.vmult;
         this.y += this.vy * mouse.vmult;
 
         // if near mouse
-        var radiusOfInfluence = 75; 
-        if ((Math.abs(mouse.x - this.x) < radiusOfInfluence) && (Math.abs(mouse.y - this.y) < radiusOfInfluence) ){
+        var radiusOfInfluence = 75;
+        if ((Math.abs(mouse.x - this.x) < radiusOfInfluence) && (Math.abs(mouse.y - this.y) < radiusOfInfluence)) {
             if (this.radius < this.maxRadius) {
                 this.radius += 0.5
-            // user clicks
-            var fac = 1.5
-            this.x +=  (mouse.x - this.x)/Math.abs(mouse.x - this.x) * fac
-            this.y +=  (mouse.y - this.y)/Math.abs(mouse.y - this.y) * fac
+                // user clicks
+                var fac = 1.5
+                this.x += (mouse.x - this.x) / Math.abs(mouse.x - this.x) * fac
+                this.y += (mouse.y - this.y) / Math.abs(mouse.y - this.y) * fac
             }
         } else {
             if (this.radius > this.minRadius) {
                 this.radius -= self.tdecay
             }
         }
-        
+
         this.draw();
     };
 };
@@ -114,12 +116,12 @@ var numCircles = 625;
 function init() {
     circle = [];
     for (var i = 0; i < numCircles; i++) {
-        var radius =  Math.random() * 5 + 1;
-        var x = Math.random() * (innerWidth - 2*radius) + radius;
-        var y = Math.random() * (innerHeight - 2*radius) + radius;;
-        var vx =  Math.round((Math.random() - 0.5) * 5) ;
-        var vy = Math.round((Math.random() - 0.5) * 5) ;
-        var tdecay = Math.random() * 0.4 
+        var radius = Math.random() * 5 + 1;
+        var x = Math.random() * (innerWidth - 2 * radius) + radius;
+        var y = Math.random() * (innerHeight - 2 * radius) + radius;;
+        var vx = Math.round((Math.random() - 0.5) * 5);
+        var vy = Math.round((Math.random() - 0.5) * 5);
+        var tdecay = Math.random() * 0.4
         color = colorArray[Math.floor(Math.random() * colorArray.length)]
         circle.push(new Circle(x, y, vx, vy, radius, color, tdecay))
     }
@@ -142,7 +144,7 @@ function animate() {
 
     //c.font = "100px Arial";
     //c.fillText("Welcome", innerWidth/3, innerHeight/2);
-    
+
 }
 
 init();

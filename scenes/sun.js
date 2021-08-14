@@ -10,6 +10,11 @@ var mountainArray = []
 var waterLevel = 0.6
 var boatArray = []
 
+var mouse = {
+    x: undefined,
+    y: undefined,
+}
+
 // event listeners
 window.addEventListener('resize', function (event) {
     //console.log(event)
@@ -21,6 +26,13 @@ window.addEventListener('resize', function (event) {
     drawMountains()
     drawBoats()
 });
+
+window.addEventListener('mousemove',
+function (event) {
+    mouse.x = event.x
+    mouse.y = event.y
+
+})
 
 
 function drawBoats() {
@@ -94,6 +106,20 @@ function drawSunset2Sea() {
 drawSunset2Sea()
 
 
+// TODO: adding components of birds and clouds
+var birdFlock = new InteractiveBirdFlock(400, 400, 30, 0);
+
+// TODO: adding components of birds and clouds
+var cloudHeight = 50
+var cloudYCoordinate =  innerHeight/4 
+var cloudColorGradient = c.createLinearGradient(0, cloudYCoordinate*2/3, 0, cloudYCoordinate + cloudHeight)
+cloudColorGradient.addColorStop(0, colorDict.cloud[0]);
+cloudColorGradient.addColorStop(1, colorDict.cloud[1]);
+var cloudArray = []
+cloudArray.push(new Cloud(innerWidth*2/3, innerHeight/4, cloudHeight, 0, cloudColorGradient));
+cloudArray.push(new Cloud(innerWidth*0.85, innerHeight/5, cloudHeight, 0, cloudColorGradient));
+
+
 // initalize counter for sun rays
 var counter = 0
 var minWait = 400
@@ -118,5 +144,7 @@ function animate() {
     theSun.draw();
     drawArrayObjects(mountainArray)
     drawArrayObjects(boatArray)
+    drawArrayObjects(cloudArray)
+    birdFlock.draw(mouse)
 }
 animate();
