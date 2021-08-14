@@ -40,7 +40,7 @@ function drawArrayObjects(arr) {
 
 
 // =============================================================================
-//  Classes (ish?)
+//  Classes / Objects / Drawn things 
 // =============================================================================
 
 // Will draw a mountain at x,y with height (h) and width (w) using  across the screen
@@ -145,5 +145,35 @@ function Boat(x, y, h, vx, boatColor, sailColor) {
         c.lineTo(this.x - this.shortLength, this.y)
         c.lineTo(this.x - this.longLength, this.y + this.boatDepth)
         c.fill();
+    }
+}
+
+
+function LightRay(x, y, vx, vy, radius, color, decayFactor) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.linewidth = radius;
+    this.color = color;
+    this.initalAlpha = 1;
+    this.decayFactor = decayFactor;// 0.004
+
+    this.update = function () {
+        // update velocity
+        this.x += this.vx;
+        this.y += this.vy;
+        this.initalAlpha -= this.decayFactor;
+    }
+
+    this.draw = function () {
+        this.update();
+
+        c.beginPath();
+        c.moveTo(this.x, this.y)
+        c.lineTo(this.x + this.vx * innerWidth * 0.05, this.y + this.vy * innerWidth * 0.05);
+        c.strokeStyle = `rgba(255, ${this.color}, 0, ${this.initalAlpha})`;
+        c.lineWidth = this.linewidth;
+        c.stroke();
     }
 }
