@@ -52,7 +52,12 @@ drawBoats();
 function drawSun() {
     this.draw = function () {
         c.beginPath();
-        c.arc(0, 0, innerHeight * 0.2, 0, Math.PI * 2, false);
+        if (innerWidth > innerHeight) {
+            var sunRadius = innerHeight * 0.2
+        } else {
+            var sunRadius = innerWidth * 0.2
+        }
+        c.arc(0, 0, sunRadius, 0, Math.PI * 2, false);
         var grd = c.createLinearGradient(0, 0, innerWidth * 0.1, innerHeight * 0.1)
         grd.addColorStop(0, colorDict.sunGradient[0]);
         grd.addColorStop(1, colorDict.sunGradient[1]);
