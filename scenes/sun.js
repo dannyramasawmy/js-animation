@@ -9,6 +9,7 @@ var lightRayArray = [];
 var mountainArray = []
 var waterLevel = 0.6
 var boatArray = []
+var cloudArray = []
 
 var mouse = {
     x: undefined,
@@ -24,15 +25,16 @@ window.addEventListener('resize', function (event) {
     drawLightRays(100);
     drawSunset2Sea()
     drawMountains()
+    drawClouds()
     drawBoats()
 });
 
 window.addEventListener('mousemove',
-function (event) {
-    mouse.x = event.x
-    mouse.y = event.y
+    function (event) {
+        mouse.x = event.x
+        mouse.y = event.y
 
-})
+    })
 
 
 function drawBoats() {
@@ -40,7 +42,7 @@ function drawBoats() {
     boatArray = []
     for (var i = 0; i < nBoat; i++) {
         var boatYCoordinate = RandomRange(innerHeight * waterLevel, innerHeight);
-        var boatHeight = RandomRange(70, 70) * Math.pow((boatYCoordinate/innerHeight), 2);
+        var boatHeight = RandomRange(70, 70) * Math.pow((boatYCoordinate / innerHeight), 2);
         var vx = RandomRange(0.2, 1) * Math.pow(-1, RandomIntRange(0, 1));
         boatArray.push(new Boat(innerWidth / 2, boatYCoordinate,
             boatHeight, vx, colorDict.boat.boat, colorDict.boat.sail));
@@ -87,7 +89,7 @@ function drawLightRays(nCircles) {
     lightRayArray = []
     for (var i = 0; i < nCircles; i++) {
         var rayWidth = RandomRange(1, 6);
-        var vx =  RandomRange(0, 1);
+        var vx = RandomRange(0, 1);
         var vy = RandomRange(0, 1);
         var decayFactor = RandomRange(0.002, 0.005);
         var color = RandomIntRange(100, 255);
@@ -115,15 +117,17 @@ drawSunset2Sea()
 var birdFlock = new InteractiveBirdFlock(400, 400, 30, 0);
 
 // TODO: adding components of birds and clouds
-var cloudHeight = 50
-var cloudYCoordinate =  innerHeight/4 
-var cloudColorGradient = c.createLinearGradient(0, cloudYCoordinate*2/3, 0, cloudYCoordinate + cloudHeight)
-cloudColorGradient.addColorStop(0, colorDict.cloud[0]);
-cloudColorGradient.addColorStop(1, colorDict.cloud[1]);
-var cloudArray = []
-cloudArray.push(new Cloud(innerWidth*2/3, innerHeight/4, cloudHeight, 0, cloudColorGradient));
-cloudArray.push(new Cloud(innerWidth*0.85, innerHeight/5, cloudHeight, 0, cloudColorGradient));
-
+function drawClouds() {
+    cloudArray = []
+    var cloudHeight = 50
+    var cloudYCoordinate = innerHeight / 4
+    var cloudColorGradient = c.createLinearGradient(0, cloudYCoordinate * 2 / 3, 0, cloudYCoordinate + cloudHeight)
+    cloudColorGradient.addColorStop(0, colorDict.cloud[0]);
+    cloudColorGradient.addColorStop(1, colorDict.cloud[1]);
+    cloudArray.push(new Cloud(innerWidth * 2 / 3, innerHeight / 4, cloudHeight, 0, cloudColorGradient));
+    cloudArray.push(new Cloud(innerWidth * 0.85, innerHeight / 5, cloudHeight, 0, cloudColorGradient));
+}
+drawClouds()
 
 // initalize counter for sun rays
 var counter = 0
@@ -134,7 +138,7 @@ var resetCounter = minWait
 
 function animate() {
     requestAnimationFrame(animate)
-    
+
     // regenerate light rays
     counter++
     if (counter > resetCounter) {
@@ -142,7 +146,7 @@ function animate() {
         drawLightRays(nLightRays)
         counter = 0
     }
-    
+
     // draw elements
     drawSunset2Sea()
     drawArrayObjects(lightRayArray)
