@@ -74,8 +74,8 @@ window.addEventListener('resize', function (event) {
 
 
 
-var myBoat = new boat(innerWidth/2 , innerHeight*2/3, 50, "#8C3718", "#F2D0A7")
-var myBoat2 = new boat(innerWidth/2 , innerHeight*4/5, 100, "#A64914", "#F2D0A7")
+var myBoat = new boat(innerWidth/2 , innerHeight*2/3, 50, colorDict.boat.boat, colorDict.boat.sail)
+var myBoat2 = new boat(innerWidth/2 , innerHeight*4/5, 100, colorDict.boat.boat, colorDict.boat.sail)
 
 
 
@@ -166,9 +166,9 @@ function animate() {
 
     drawArrayObjects(mountainArray)
 
-    myBoat.move(1)
+    myBoat.update(0.5)
     myBoat.draw()
-    myBoat2.move(-2)
+    myBoat2.update(-1)
     myBoat2.draw()
 
 }
