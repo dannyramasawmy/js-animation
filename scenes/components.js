@@ -210,9 +210,11 @@ function InteractiveBirdFlock(x, y, wingSpan, flapVelocity) {
     }
     this.wingPositionIndex = 0
     this.wing = {
-        elbow: [-1/2,  0, -1/2],
-        tip: [-1, 1, 0],
-        steps:  Math.round(100)
+        // angle
+        // elbow: [0, Math.PI/180*45, -Math.PI/180*45],
+        elbow: [Math.PI/180*45, -Math.PI/180*20,-Math.PI/180*45],
+        tip: [Math.PI/180*45, Math.PI/180*30, -Math.PI/180*45],
+        steps:  Math.round(100 / this.flapVelocity)
     }
     this.wingList = {
         elbow: [].concat(
@@ -231,22 +233,27 @@ function InteractiveBirdFlock(x, y, wingSpan, flapVelocity) {
     }
 
     this.drawBird = function (x, y) {
+        y = y - this.wingSpan/3
         // dynamic
-        var elbow = this.wingSpan * this.wingList.elbow[this.wingPositionIndex]
-        var tip = this.wingSpan * this.wingList.tip[this.wingPositionIndex]
+        var elbowX = this.elbowLength * Math.cos(this.wingList.elbow[this.wingPositionIndex])
+        var elbowY = this.elbowLength * Math.sin(this.wingList.elbow[this.wingPositionIndex])
+
+        var tipX = this.tipLength * Math.cos(this.wingList.tip[this.wingPositionIndex]) + elbowX
+        var tipY = this.tipLength * Math.sin(this.wingList.tip[this.wingPositionIndex]) + elbowY
+        
         this.wingPositionIndex = (this.wingPositionIndex + 1) % this.wingList.elbow.length
 
         c.beginPath();
-        c.moveTo(x, y - this.wingSpan / 3)
-        c.lineTo(x + this.wingSpan / 3, y + elbow);
-        c.lineTo(x + this.wingSpan, y + tip);
+        c.moveTo(x, y )
+        c.lineTo(x + elbowX, y + elbowY );
+        c.lineTo(x + tipX, y + tipY);
         c.strokeStyle = "black";
         c.stroke();
 
         c.beginPath();
-        c.moveTo(x, y - this.wingSpan / 3)
-        c.lineTo(x - this.wingSpan / 3, y +  elbow);
-        c.lineTo(x - this.wingSpan, y + tip);
+        c.moveTo(x, y )
+        c.lineTo(x - elbowX, y + elbowY);
+        c.lineTo(x - tipX, y + tipY);
         c.strokeStyle = "black";
         c.stroke();
 

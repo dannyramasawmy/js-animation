@@ -117,7 +117,7 @@ drawSunset2Sea()
 
 
 // TODO: adding components of birds and clouds
-var birdFlock = new InteractiveBirdFlock(400, 400, 30, 0);
+var birdFlock = new InteractiveBirdFlock(400, 400, 30, 1);
 
 // TODO: adding components of birds and clouds
 function drawClouds() {
