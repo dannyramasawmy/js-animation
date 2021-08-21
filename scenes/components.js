@@ -180,16 +180,16 @@ function LightRay(x, y, vx, vy, radius, color, decayFactor) {
     this.draw = function () {
         this.update();
 
-        c.shadowBlur = 20;
+        // c.shadowBlur = 20;
         c.beginPath();
         c.moveTo(this.x, this.y)
         c.lineTo(this.x + this.vx * innerWidth * 0.05, this.y + this.vy * innerWidth * 0.05);
         c.lineCap = 'round';
-        c.shadowColor = 'white';
+        // c.shadowColor = 'white';
         c.strokeStyle = `rgba(255, ${this.color}, 0, ${this.initalAlpha})`;
         c.lineWidth = this.linewidth;
         c.stroke();
-        c.shadowBlur = 0;
+        // c.shadowBlur = 0;
     }
 }
 
@@ -211,7 +211,6 @@ function InteractiveBirdFlock(x, y, wingSpan, flapVelocity) {
     this.wingPositionIndex = 0
     this.wing = {
         // angle
-        // elbow: [0, Math.PI/180*45, -Math.PI/180*45],
         elbow: [Math.PI/180*45, -Math.PI/180*20,-Math.PI/180*45],
         tip: [Math.PI/180*45, Math.PI/180*30, -Math.PI/180*45],
         steps:  Math.round(100 / this.flapVelocity)
