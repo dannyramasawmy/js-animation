@@ -8,8 +8,8 @@ var colorDict = {
         "boat": "#8C3718",
         "sail": "#F2D0A7"
     },
-    "sunGradient" : [`rgb(255, 255, 0)`, 'rgb(255, 100, 0)'],
-    "cloud" : ["#FBDDB5", '#F35C03']
+    "sunGradient": [`rgb(255, 255, 0)`, 'rgb(255, 100, 0)'],
+    "cloud": ["#FBDDB5", '#F35C03']
 }
 
 // =============================================================================
@@ -37,6 +37,16 @@ function drawArrayObjects(arr) {
     for (var i = 0; i < arr.length; i++) {
         arr[i].draw()
     }
+}
+
+function linspace(start, end, steps) {
+    // linear steps 
+    var stepSize = (end - start) / (steps - 1);
+    var arr = [];
+    for (var i = 0; i < steps; i++) {
+        arr[i] = start + i * stepSize
+    }
+    return arr
 }
 
 
@@ -118,7 +128,7 @@ function Boat(x, y, h, vx, boatColor, sailColor) {
         c.lineTo(this.x, this.y - this.sailHeight - this.sailYOffset - this.boatDepth)
         c.lineTo(this.x + this.sailLength, this.y - this.sailYOffset - this.boatDepth)
         c.fill();
-        
+
         // sail reflection
         c.beginPath();
         c.fillStyle = this.sailColor + this.reflectionAlpha
@@ -170,12 +180,16 @@ function LightRay(x, y, vx, vy, radius, color, decayFactor) {
     this.draw = function () {
         this.update();
 
+        c.shadowBlur = 20;
         c.beginPath();
         c.moveTo(this.x, this.y)
         c.lineTo(this.x + this.vx * innerWidth * 0.05, this.y + this.vy * innerWidth * 0.05);
+        c.lineCap = 'round';
+        c.shadowColor = 'white';
         c.strokeStyle = `rgba(255, ${this.color}, 0, ${this.initalAlpha})`;
         c.lineWidth = this.linewidth;
         c.stroke();
+        c.shadowBlur = 0;
     }
 }
 
@@ -183,32 +197,59 @@ function LightRay(x, y, vx, vy, radius, color, decayFactor) {
 function InteractiveBirdFlock(x, y, wingSpan, flapVelocity) {
     this.x = x;
     this.y = y;
+    // wing lengths
     this.wingSpan = wingSpan;
-    this.flapVelocity = flapVelocity;
+    this.elbowTipRatio = 1/3
+    this.elbowLength = this.wingSpan * this.elbowTipRatio;
+    this.tipLength = this.wingSpan - this.elbowLength;
+    // flapping properties
+    this.flapVelocity = flapVelocity; 
     this.offset = {
-        x : this.wingSpan,
-        y : this.wingSpan
+        x: this.wingSpan,
+        y: this.wingSpan
+    }
+    this.wingPositionIndex = 0
+    this.wing = {
+        elbow: [-1/2,  0, -1/2],
+        tip: [-1, 1, 0],
+        steps:  Math.round(100)
+    }
+    this.wingList = {
+        elbow: [].concat(
+            linspace(this.wing.elbow[0], this.wing.elbow[1], this.wing.steps),
+            linspace(this.wing.elbow[1], this.wing.elbow[2], this.wing.steps),
+            linspace(this.wing.elbow[2], this.wing.elbow[0], this.wing.steps)),
+        tip: [].concat(
+            linspace(this.wing.tip[0], this.wing.tip[1], this.wing.steps),
+            linspace(this.wing.tip[1], this.wing.tip[2], this.wing.steps),
+            linspace(this.wing.tip[2], this.wing.tip[0], this.wing.steps)),
     }
 
     this.update = function (mouse) {
         this.x = mouse.x
-        this.y = mouse.y    
+        this.y = mouse.y
     }
-    
-    this.drawBird = function(x, y) {
+
+    this.drawBird = function (x, y) {
+        // dynamic
+        var elbow = this.wingSpan * this.wingList.elbow[this.wingPositionIndex]
+        var tip = this.wingSpan * this.wingList.tip[this.wingPositionIndex]
+        this.wingPositionIndex = (this.wingPositionIndex + 1) % this.wingList.elbow.length
+
         c.beginPath();
-        c.moveTo(x, y-this.wingSpan/3)
-        c.lineTo(x + this.wingSpan/3 , y -this.wingSpan/2);
-        c.lineTo(x + this.wingSpan,   y );
+        c.moveTo(x, y - this.wingSpan / 3)
+        c.lineTo(x + this.wingSpan / 3, y + elbow);
+        c.lineTo(x + this.wingSpan, y + tip);
         c.strokeStyle = "black";
         c.stroke();
 
         c.beginPath();
-        c.moveTo(x, y-this.wingSpan/3)
-        c.lineTo(x - this.wingSpan/3 , y -this.wingSpan/2);
-        c.lineTo(x - this.wingSpan,   y );
+        c.moveTo(x, y - this.wingSpan / 3)
+        c.lineTo(x - this.wingSpan / 3, y +  elbow);
+        c.lineTo(x - this.wingSpan, y + tip);
         c.strokeStyle = "black";
         c.stroke();
+
     }
 
     this.draw = function (mouse) {
@@ -231,12 +272,12 @@ function Cloud(x, y, h, vx, cloudColor) {
     this.update = function () {
         // TODO: will be updated with some velocity
         this.x = this.x
-        this.y = this.y    
+        this.y = this.y
     }
-    
+
     this.drawCloud = function (x, y) {
         c.beginPath();
-        c.arc(x, y, this.height, -Math.PI,0, false);
+        c.arc(x, y, this.height, -Math.PI, 0, false);
         c.fillStyle = this.cloudColor;
         c.fill();
     }
@@ -244,9 +285,9 @@ function Cloud(x, y, h, vx, cloudColor) {
     this.draw = function () {
         this.update()
 
-        this.drawCloud(this.x+this.height*1/2, this.y-this.height/4)
-        this.drawCloud(this.x+this.height, this.y+this.height/4)
+        this.drawCloud(this.x + this.height * 1 / 2, this.y - this.height / 4)
+        this.drawCloud(this.x + this.height, this.y + this.height / 4)
         this.drawCloud(this.x, this.y)
-    
+
     }
 }

@@ -59,12 +59,15 @@ function drawSun() {
         } else {
             var sunRadius = innerWidth * 0.2
         }
+        c.shadowBlur = 15;
+        c.shadowColor = 'white';
         c.arc(0, 0, sunRadius, 0, Math.PI * 2, false);
         var grd = c.createLinearGradient(0, 0, innerWidth * 0.1, innerHeight * 0.1)
         grd.addColorStop(0, colorDict.sunGradient[0]);
         grd.addColorStop(1, colorDict.sunGradient[1]);
         c.fillStyle = grd;
         c.fill();
+        c.shadowBlur = 0;
     }
 }
 var theSun = new drawSun();
