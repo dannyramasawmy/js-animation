@@ -79,6 +79,48 @@ function init() {
 
 }
 
+
+
+
+function House(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.fac = 100;
+    this.color = color;
+
+    this.draw = function() {
+      c.beginPath();
+        var fac = this.fac
+        c.fillStyle = this.color
+        c.moveTo(this.x, +this.y)
+        c.lineTo(this.x + 4*fac, +this.y)
+        c.lineTo(this.x + 4*fac, +this.y - 3*fac)
+        c.lineTo(this.x, +this.y - 3*fac)
+        c.moveTo(this.x, +this.y)
+        c.fill();    
+
+        /*
+        c.fillStyle = this.color
+        c.lineTo(this.x, +this.y - 3*fac)
+        c.lineTo(this.x + 4*fac, +this.y - 3*fac)
+        c.lineTo(this.x + 5*fac, +this.y - 4.5*fac)
+        c.lineTo(this.x + 1*fac, +this.y - 4.5*fac)
+        c.moveTo(this.x, +this.y - 3*fac)
+        c.fill();    
+*/
+        
+    };
+
+    this.update = function() {
+        this.draw();
+    };
+};
+
+
+var myLogCabin = new House(innerWidth/19, innerHeight*4/5, '#AA5522')
+
+
+
 // background color gradient
 gradient = c.createLinearGradient(0, 0, 0, innerHeight)
 gradient.addColorStop(0, 'black');
@@ -95,11 +137,15 @@ function animate() {
     c.fillStyle = gradient;
     c.fillRect(0, 0, innerWidth, innerHeight);
 
+    
+    myLogCabin.update()
+
     // update all circles
     for (var i = 0; i < circle.length; i++) {
         circle[i].update();
     }
-
+    
+    //myLogCabin.update()
     //c.font = "100px Arial";
     //c.fillText("Welcome", innerWidth/3, innerHeight/2);
     
